@@ -1,32 +1,51 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { defer, tap, mapTo, of, timer, EMPTY, take, filter, BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
-      <span style="display: block">{{ title }} app is running!</span>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+    <div class="container">
+      <form class="my-5" [formGroup]="form">
+        <div class="mb-3">
+          <label for="title">Title *</label>
+          <input class="form-control" formControlName="title" id="title" />
+        </div>
+
+        <div class="mb-3">
+          <label for="content">Content</label>
+          <textarea class="form-control" formControlName="content" id="content"></textarea>
+        </div>
+
+        <div class="d-flex align-items-center">
+          <button class="btn btn-primary" [appAsyncAction]="save$">Save</button>
+          <span *ngIf="counter$ | async as counter" class="ms-3 d-inline-block">{{ counter }}</span>
+        </div>
+      </form>
     </div>
-    <h2>Here are some links to help you start: </h2>
-    <ul>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-      </li>
-    </ul>
-    
   `,
-  styles: []
+  styles: [],
 })
 export class AppComponent {
-  title = 'async-action';
+  form = new FormGroup({
+    title: new FormControl(null, [Validators.required]),
+    content: new FormControl(null),
+  });
+
+  counter$ = new BehaviorSubject<number>(0);
+
+  save$ = defer(() => {
+    if (!this.form.invalid) {
+      this.counter$.next(5);
+      return timer(0, 1_000).pipe(
+        tap((i) => this.counter$.next(this.counter$.value - 1)),
+        take(5),
+        filter((i) => i === 4),
+        tap(() => alert('Form saved')),
+      );
+    } else {
+      alert('Form is invalid');
+      return EMPTY;
+    }
+  });
 }
