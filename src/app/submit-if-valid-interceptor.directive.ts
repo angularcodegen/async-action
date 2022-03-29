@@ -23,6 +23,7 @@ export class SubmitIfValidInterceptorDirective implements ActionInterceptor {
   @Input('appSubmitIfValidInterceptor') form!: AbstractControl;
 
   intercept(action$: Observable<unknown>): Observable<unknown> {
+    console.log('SubmitIfValidInterceptorDirective.intercept()');
     return defer(() => {
       if (!this.form.valid) {
         alert('Form is invalid');

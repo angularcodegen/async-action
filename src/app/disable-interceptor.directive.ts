@@ -16,6 +16,7 @@ export class DisableInterceptorDirective implements ActionInterceptor {
   constructor(private elementRef: ElementRef<HTMLButtonElement>) {}
 
   intercept(action$: Observable<unknown>): Observable<unknown> {
+    console.log('DisableInterceptorDirective.intercept()');
     this.elementRef.nativeElement.disabled = true;
     return action$.pipe(finalize(() => (this.elementRef.nativeElement.disabled = false)));
   }
