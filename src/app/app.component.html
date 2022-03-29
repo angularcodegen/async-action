@@ -5,14 +5,41 @@
       <span>(ID: {{ item.id }}) {{ item.name }}</span>
       <span>
         <span *ngIf="item._timer as timer">{{ timer }}</span>
-        <button [appAsyncAction]="removeUser$" [appAsyncActionData]="item" class="btn btn-danger btn-sm ms-3">
+        <button
+          [appAsyncAction]="removeUser$"
+          [appAsyncActionData]="item"
+          appDisableInterceptor
+          class="btn btn-danger btn-sm ms-3"
+        >
           Remove
         </button>
       </span>
     </li>
   </ul>
 
-  <div class="text-end">
-    <button (click)="addNewUser()" class="btn btn-primary btn-sm mt-3">Add new user</button>
-  </div>
+  <form [formGroup]="form" class="mt-5">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name *</label>
+      <input formControlName="name" type="text" class="form-control" id="name" />
+      <label
+        *ngIf="(form.get('name')!.touched || form.get('name')!.dirty) && form.get('name')!.invalid"
+        class="invalid-feedback d-block"
+        for="name"
+      >
+        Please provide a valid name for user.
+      </label>
+    </div>
+    <div class="text-end">
+      <button
+        [appAsyncAction]="addUser$"
+        [appAsyncActionData]="form.value"
+        appDisableInterceptor
+        [appSubmitIfValidInterceptor]="form"
+        class="btn btn-primary btn-sm mt-3"
+        type="submit"
+      >
+        Add new user
+      </button>
+    </div>
+  </form>
 </div>
