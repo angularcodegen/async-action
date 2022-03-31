@@ -4,26 +4,7 @@ import { defer, tap, mapTo, of, timer, EMPTY, take, filter, BehaviorSubject, Sub
 
 @Component({
   selector: 'app-root',
-  template: `
-    <div class="container">
-      <form class="my-5" [formGroup]="form">
-        <div class="mb-3">
-          <label for="title">Title *</label>
-          <input class="form-control" formControlName="title" id="title" />
-        </div>
-
-        <div class="mb-3">
-          <label for="content">Content</label>
-          <textarea class="form-control" formControlName="content" id="content"></textarea>
-        </div>
-
-        <div class="d-flex align-items-center">
-          <button class="btn btn-primary" [appAsyncAction]="save$">Save</button>
-          <span *ngIf="counter$ | async as counter" class="ms-3 d-inline-block">{{ counter }}</span>
-        </div>
-      </form>
-    </div>
-  `,
+  templateUrl: './app.component.html',
   styles: [],
 })
 export class AppComponent {
