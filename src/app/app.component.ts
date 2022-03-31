@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { defer, tap, mapTo, of, timer, EMPTY, take, filter, BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, defer, EMPTY, filter, take, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
